@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssm.user.dao.UserDAO">
+
+	<sql id="tableColumns">
+		id,name,password,age,sex,birthday,idcard
+	</sql>
+
+	<insert id="insert" parameterType="UserDTO">
+		insert into user_tab (
+		<include refid="tableColumns" />
+		)
+		values
+		(#{id},#{name},#{password},#{age},#{sex},#{birthday},#{idcard})
+		<selectKey resultType="Integer" keyProperty="id">
+			select @@IDENTITY
+			as id
+		</selectKey>
+	</insert>
+
+	<update id="updateById" parameterType="UserDTO">
+		update user_tab set
+		<if test="name != null">
+			name=#{name}
+		</if>
+		<if test="password != null">
+			,password=#{password}
+		</if>
+		<if test="age != null">
+			,age=#{age}
+		</if>
+		<if test="sex != null">
+			,sex=#{sex}
+		</if>
+		<if test="birthday != null">
+			,birthday=#{birthday}
+		</if>
+		<if test="idcard != null">
+			,idcard=#{idcard}
+		</if>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		delete from user_tab where
+		id = #{id}
+	</delete>
+
+	<select id="findById" resultType="UserDTO" parameterType="java.lang.Integer">
+		select
+		<include refid="tableColumns" />
+		from user_tab where id = #{id}
+	</select>
+
+	<select id="findByCondition" resultType="UserDTO">
+		select
+		<include refid="tableColumns" />
+		from user_tab
+		order by id desc
+	</select>
+</mapper>
